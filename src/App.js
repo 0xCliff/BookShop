@@ -9,7 +9,7 @@ function App() {
 
   useEffect(() => {
     getAllBooks();
-  }, []);
+  }, [getAllBooks]);
 
   return (
     <div className='app'>
