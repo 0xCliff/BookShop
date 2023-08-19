@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useState, useCallback } from 'react';
 import axios from 'axios';
 
 const BooksContext = createContext();
@@ -7,12 +7,12 @@ const URL = 'http://localhost:3001/books';
 function Provider({ children }) {
   const [books, setBooks] = useState([]);
 
-  const getAllBooks = async () => {
-    let data = await axios.get(URL).then((res) => res.data);
+  const getAllBooks = useCallback(async () => {
+    let data = await axios.get(URL).then(res => res.data);
     setBooks(data);
-  };
+  }, []);
 
-  const createBook = async (title) => {
+  const createBook = async title => {
     const response = await axios.post(URL, {
       title: title,
     });
@@ -21,10 +21,10 @@ function Provider({ children }) {
     setBooks(updatedBooks);
   };
 
-  const deleteBookById = async (id) => {
+  const deleteBookById = async id => {
     await axios.delete(`${URL}/${id}`);
 
-    const updatedBooks = books.filter((book) => {
+    const updatedBooks = books.filter(book => {
       return book.id !== id;
     });
 
@@ -36,7 +36,7 @@ function Provider({ children }) {
       title: newTitle,
     });
 
-    const updatedBooks = books.map((book) => {
+    const updatedBooks = books.map(book => {
       if (book.id === id) {
         return { ...book, ...response.data };
       }
